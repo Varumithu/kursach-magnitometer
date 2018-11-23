@@ -12,8 +12,8 @@ public:
     double x, y, z;
     point(double x, double y, double z) : x(x), y(y), z(z) {}
     point() = default;
-    point(point&& other) noexcept : x(other.x), y(other.y), z(other.z) {}
-    point(point& other) = default;
+    point(const point& other) noexcept : x(other.x), y(other.y), z(other.z) {}
+    //point(point& other) = default;
 
 };
 
@@ -26,8 +26,8 @@ public:
 
     size_t find_nearest(const point&& that) const; // returns position of the nearest element in the data vector
 
-    point calculate_offset(); // returns a point just for convenience, three numbers that must be substracted from coordintaes
-    
+    point calculate_offset() const; // returns a point just for convenience, three numbers that must be substracted from coordintaes
+    void apply_offset();
 
 };
 
