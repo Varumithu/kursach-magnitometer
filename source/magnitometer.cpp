@@ -26,10 +26,13 @@ size_t magnitometer_data::find_nearest(const point &&that) const { // the first 
 }
 
 point magnitometer_data::calculate_offset() const {
-    double x_offset = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.x < second.x); })->x;
-    double y_offset = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.y < second.y); })->y;
-    double z_offset = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.z < second.z); })->z;
-    return {x_offset, y_offset, z_offset};
+    double x_max = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.x < second.x); })->x;
+    double y_max = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.y < second.y); })->y;
+    double z_max = std::max_element(data.begin(), data.end(), [](point first, point second){ return (first.z < second.z); })->z;
+    double x_min = std::min_element(data.begin(), data.end(), [](point first, point second){ return (first.x < second.x); })->x;
+    double y_min = std::min_element(data.begin(), data.end(), [](point first, point second){ return (first.y < second.y); })->y;
+    double z_min = std::min_element(data.begin(), data.end(), [](point first, point second){ return (first.z < second.z); })->z;
+    return {x_max / 2 + x_min / 2, y_max / 2 + y_min / 2, z_max / 2 + z_min / 2};
 }
 
 void magnitometer_data::apply_offset() {
