@@ -6,6 +6,7 @@
 #define KURSACH_MAGNITOMETER_MAGNITOMETER_H
 
 #include <vector>
+#include <Eigen/Dense>
 
 class point final {
 public:
@@ -13,7 +14,6 @@ public:
     point(double x, double y, double z) : x(x), y(y), z(z) {}
     point() = default;
     point(const point& other) noexcept : x(other.x), y(other.y), z(other.z) {}
-    //point(point& other) = default;
 
 };
 
@@ -28,10 +28,11 @@ public:
 
     point calculate_offset() const; // returns a point just for convenience, three numbers that must be substracted from coordintaes
     void apply_offset();
-
+    std::vector<size_t> find_base_points();
+    void calculate_coeffs(std::vector<size_t>& base_points);
 };
 
-
+double calculate_squared_range(point& first, point& second);
 
 
 

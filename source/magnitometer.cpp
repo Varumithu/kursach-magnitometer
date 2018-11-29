@@ -12,6 +12,37 @@ double calculate_squared_range(const point& first, const point& second) {//
     return (first.x - second.x) * (first.x - second.x) + (first.y - second.y) * (first.y - second.y) + (first.z - second.z) * (first.z - second.z);
 }
 
+std::vector<size_t> magnitometer_data::find_base_points() {
+    std::vector<size_t> res{0, 0, 0, 0};
+    //TODO
+
+}
+
+void magnitometer_data::calculate_coeffs(std::vector<size_t>& base_points) {
+    Eigen::Matrix<double, 3, 3> m_delta;
+    m_delta << (data[base_points[0]].x - data[base_points[1]].x),
+               (data[base_points[0]].y - data[base_points[1]].y),
+               (data[base_points[0]].z - data[base_points[1]].z),
+               (data[base_points[0]].x - data[base_points[2]].x),
+               (data[base_points[0]].y - data[base_points[2]].y),
+               (data[base_points[0]].z - data[base_points[2]].z),
+               (data[base_points[0]].x - data[base_points[3]].x),
+               (data[base_points[0]].y - data[base_points[3]].y),
+               (data[base_points[0]].z - data[base_points[3]].z);
+    double delta = m_delta.determinant();
+    Eigen::Matrix<double, 3, 3> A_1, A_2, B_1, B_2, C_1, C_2;
+    A_1 << data[base_points[0]].x * data[base_points[0]].x - data[base_points[1]].x * data[base_points[1]].x,
+           data[base_points[0]].y - data[base_points[1]].y,
+           data[base_points[0]].z - data[base_points[1]].z,
+           data[base_points[0]].x * data[base_points[0]].x - data[base_points[2]].x * data[base_points[2]].x,
+           data[base_points[0]].y - data[base_points[2]].y,
+           data[base_points[0]].z - data[base_points[2]].z,
+           data[base_points[0]].x * data[base_points[0]].x - data[base_points[3]].x * data[base_points[3]].x,
+           data[base_points[0]].y - data[base_points[3]].y,
+           data[base_points[0]].z - data[base_points[3]].z;
+}
+
+
 size_t magnitometer_data::find_nearest(const point &&that) const { // the first search implementation that comes to mind, maybe should change it later
     double range = calculate_squared_range(data[0], that);
     size_t res = 0;
