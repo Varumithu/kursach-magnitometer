@@ -19,29 +19,25 @@ public:
 
 
 
-class magnitometer_data final {
+class transform_calculator final {
 private:
-    double calculate_det_delta (const std::vector<point>& base_points) const;
-    double calculate_det_A_1 (const std::vector<point>& base_points) const;
-    double calculate_det_B_1 (const std::vector<point>& base_points) const;
-    double calculate_det_C_1 (const std::vector<point>& base_points) const;
-    double calculate_det_A_2 (const std::vector<point>& base_points) const;
-    double calculate_det_B_2 (const std::vector<point>& base_points) const;
-    double calculate_det_C_2 (const std::vector<point>& base_points) const;
+    double calculate_abc (const size_t select) const;
+    double calculate_det_delta () const;
+    double calculate_det_A_1 () const;
+    double calculate_det_B_1 () const;
+    double calculate_det_C_1 () const;
+    double calculate_det_A_2 () const;
+    double calculate_det_B_2 () const;
+    double calculate_det_C_2 () const;
+    double calculate_delta_z (const double a, const double b, const double c) const;
 public:
+    double x_0, y_0, z_0, alpha, beta, gamma = 1.0;
+    transform_calculator(std::vector<point>& base_points);
 
-    std::vector<point> data;
+    std::vector<point> base_points;
 
-    size_t find_nearest(const point&& that) const; // returns position of the nearest element in the data vector
-
-    point calculate_offset() const; // returns a point just for convenience, three numbers that must be substracted from coordintaes
-    void apply_offset();
-    std::vector<size_t> find_base_points();
-    void calculate_coeffs(std::vector<point>& base_points);
+    void calculate_coeffs();
 };
-
-double calculate_squared_range(point& first, point& second);
-
 
 
 
