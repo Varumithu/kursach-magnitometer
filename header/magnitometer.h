@@ -20,6 +20,14 @@ public:
 
 
 class magnitometer_data final {
+private:
+    double calculate_det_delta (const std::vector<point>& base_points) const;
+    double calculate_det_A_1 (const std::vector<point>& base_points) const;
+    double calculate_det_B_1 (const std::vector<point>& base_points) const;
+    double calculate_det_C_1 (const std::vector<point>& base_points) const;
+    double calculate_det_A_2 (const std::vector<point>& base_points) const;
+    double calculate_det_B_2 (const std::vector<point>& base_points) const;
+    double calculate_det_C_2 (const std::vector<point>& base_points) const;
 public:
 
     std::vector<point> data;
@@ -29,7 +37,7 @@ public:
     point calculate_offset() const; // returns a point just for convenience, three numbers that must be substracted from coordintaes
     void apply_offset();
     std::vector<size_t> find_base_points();
-    void calculate_coeffs(std::vector<size_t>& base_points);
+    void calculate_coeffs(std::vector<point>& base_points);
 };
 
 double calculate_squared_range(point& first, point& second);

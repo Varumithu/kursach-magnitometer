@@ -18,109 +18,122 @@ std::vector<size_t> magnitometer_data::find_base_points() {
 
 }
 
-double magnitometer_data::calculate_det_A_1 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_A_1 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> A_1;
-    A_1 << data[base_points[0]].x * data[base_points[0]].x - data[base_points[1]].x * data[base_points[1]].x,
-           data[base_points[0]].y - data[base_points[1]].y,
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[0]].x * data[base_points[0]].x - data[base_points[2]].x * data[base_points[2]].x,
-           data[base_points[0]].y - data[base_points[2]].y,
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[0]].x * data[base_points[0]].x - data[base_points[3]].x * data[base_points[3]].x,
-           data[base_points[0]].y - data[base_points[3]].y,
-           data[base_points[0]].z - data[base_points[3]].z;
+    A_1 << base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x,
+           base_points[0].y - base_points[1].y,
+           base_points[0].z - base_points[1].z,
+           base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x,
+           base_points[0].y - base_points[2].y,
+           base_points[0].z - base_points[2].z,
+           base_points[0].x * base_points[0].x - base_points[3].x * base_points[3].x,
+           base_points[0].y - base_points[3].y,
+           base_points[0].z - base_points[3].z;
     return A_1.determinant();
 }
-double magnitometer_data::calculate_det_B_1 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_B_1 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> B_1;
-    B_1 << data[base_points[1]].y * (data[base_points[0]].y - data[base_points[1]].y),
-           data[base_points[0]].y - data[base_points[1]].y,
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[2]].y * (data[base_points[0]].y - data[base_points[2]].y),
-           data[base_points[0]].y - data[base_points[2]].y,
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[3]].y * (data[base_points[0]].y - data[base_points[3]].y),
-           data[base_points[0]].y - data[base_points[3]].y,
-           data[base_points[0]].z - data[base_points[3]].z;
+    B_1 << base_points[1].y * (base_points[0].y - base_points[1].y),
+           base_points[0].y - base_points[1].y,
+           base_points[0].z - base_points[1].z,
+           base_points[2].y * (base_points[0].y - base_points[2].y),
+           base_points[0].y - base_points[2].y,
+           base_points[0].z - base_points[2].z,
+           base_points[3].y * (base_points[0].y - base_points[3].y),
+           base_points[0].y - base_points[3].y,
+           base_points[0].z - base_points[3].z;
     return B_1.determinant();
 }
-double magnitometer_data::calculate_det_C_1 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_C_1 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> C_1;
-    C_1 << data[base_points[1]].z * (data[base_points[0]].z - data[base_points[1]].z),
-           data[base_points[0]].y - data[base_points[1]].y,
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[2]].z * (data[base_points[0]].z - data[base_points[2]].z),
-           data[base_points[0]].y - data[base_points[2]].y,
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[3]].z * (data[base_points[0]].z - data[base_points[3]].z),
-           data[base_points[0]].y - data[base_points[3]].y,
-           data[base_points[0]].z - data[base_points[3]].z;
+    C_1 << base_points[1].z * (base_points[0].z - base_points[1].z),
+           base_points[0].y - base_points[1].y,
+           base_points[0].z - base_points[1].z,
+           base_points[2].z * (base_points[0].z - base_points[2].z),
+           base_points[0].y - base_points[2].y,
+           base_points[0].z - base_points[2].z,
+           base_points[3].z * (base_points[0].z - base_points[3].z),
+           base_points[0].y - base_points[3].y,
+           base_points[0].z - base_points[3].z;
     return C_1.determinant();
 }
-double magnitometer_data::calculate_det_A_2 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_A_2 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> A_2;
-    A_2 << data[base_points[0]].x - data[base_points[1]].x,
-           data[base_points[1]].x * (data[base_points[0]].x - data[base_points[1]].x),
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[0]].x - data[base_points[2]].x,
-           data[base_points[2]].x * (data[base_points[0]].x - data[base_points[2]].x),
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[0]].x - data[base_points[3]].x,
-           data[base_points[3]].x * (data[base_points[0]].x - data[base_points[3]].x),
-           data[base_points[0]].z - data[base_points[3]].z;
+    A_2 << base_points[0].x - base_points[1].x,
+           base_points[1].x * (base_points[0].x - base_points[1].x),
+           base_points[0].z - base_points[1].z,
+           base_points[0].x - base_points[2].x,
+           base_points[2].x * (base_points[0].x - base_points[2].x),
+           base_points[0].z - base_points[2].z,
+           base_points[0].x - base_points[3].x,
+           base_points[3].x * (base_points[0].x - base_points[3].x),
+           base_points[0].z - base_points[3].z;
     return A_2.determinant();
 }
-double magnitometer_data::calculate_det_B_2 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_B_2 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> B_2;
-    B_2 << data[base_points[0]].x - data[base_points[1]].x,
-           data[base_points[0]].y * data[base_points[0]].y - data[base_points[1]].y * data[base_points[1]].y,
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[0]].x - data[base_points[2]].x,
-           data[base_points[0]].y * data[base_points[0]].y - data[base_points[2]].y * data[base_points[2]].y,
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[0]].x - data[base_points[3]].x,
-           data[base_points[0]].y * data[base_points[0]].y - data[base_points[3]].y * data[base_points[3]].y,
-           data[base_points[0]].z - data[base_points[3]].z;
+    B_2 << base_points[0].x - base_points[1].x,
+           base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y,
+           base_points[0].z - base_points[1].z,
+           base_points[0].x - base_points[2].x,
+           base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y,
+           base_points[0].z - base_points[2].z,
+           base_points[0].x - base_points[3].x,
+           base_points[0].y * base_points[0].y - base_points[3].y * base_points[3].y,
+           base_points[0].z - base_points[3].z;
     return B_2.determinant();
 }
-double magnitometer_data::calculate_det_C_2 (const std::vector<size_t>& base_points) const {
+double magnitometer_data::calculate_det_C_2 (const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> C_2;
-    C_2 << data[base_points[0]].x - data[base_points[1]].x,
-           data[base_points[1]].z * (data[base_points[0]].z - data[base_points[1]].z),
-           data[base_points[0]].z - data[base_points[1]].z,
-           data[base_points[0]].x - data[base_points[2]].x,
-           data[base_points[2]].x * (data[base_points[0]].x - data[base_points[2]].x),
-           data[base_points[0]].z - data[base_points[2]].z,
-           data[base_points[0]].x - data[base_points[3]].x,
-           data[base_points[3]].x * (data[base_points[0]].x - data[base_points[3]].x),
-           data[base_points[0]].z - data[base_points[3]].z;
+    C_2 << base_points[0].x - base_points[1].x,
+           base_points[1].z * (base_points[0].z - base_points[1].z),
+           base_points[0].z - base_points[1].z,
+           base_points[0].x - base_points[2].x,
+           base_points[2].x * (base_points[0].x - base_points[2].x),
+           base_points[0].z - base_points[2].z,
+           base_points[0].x - base_points[3].x,
+           base_points[3].x * (base_points[0].x - base_points[3].x),
+           base_points[0].z - base_points[3].z;
     return C_2.determinant();
 }
 
-void magnitometer_data::calculate_coeffs(std::vector<size_t>& base_points) {
+double magnitometer_data::calculate_det_delta(const std::vector<point>& base_points) const {
     Eigen::Matrix<double, 3, 3> m_delta;
-    m_delta << (data[base_points[0]].x - data[base_points[1]].x),
-               (data[base_points[0]].y - data[base_points[1]].y),
-               (data[base_points[0]].z - data[base_points[1]].z),
-               (data[base_points[0]].x - data[base_points[2]].x),
-               (data[base_points[0]].y - data[base_points[2]].y),
-               (data[base_points[0]].z - data[base_points[2]].z),
-               (data[base_points[0]].x - data[base_points[3]].x),
-               (data[base_points[0]].y - data[base_points[3]].y),
-               (data[base_points[0]].z - data[base_points[3]].z);
-    double delta = m_delta.determinant();
+    m_delta << (base_points[0].x - base_points[1].x),
+               (base_points[0].y - base_points[1].y),
+               (base_points[0].z - base_points[1].z),
+               (base_points[0].x - base_points[2].x),
+               (base_points[0].y - base_points[2].y),
+               (base_points[0].z - base_points[2].z),
+               (base_points[0].x - base_points[3].x),
+               (base_points[0].y - base_points[3].y),
+               (base_points[0].z - base_points[3].z);
+    return m_delta.determinant();
+}
+
+void magnitometer_data::calculate_coeffs(std::vector<point>& base_points) {
+    double delta = calculate_det_delta(base_points);
     double A_1 = calculate_det_A_1(base_points);
     double C_1 = calculate_det_C_1(base_points);
     double C_2 = calculate_det_C_2(base_points);
     double B_2 = calculate_det_B_2(base_points);
     double B_1 = calculate_det_B_1(base_points);
     double A_2 = calculate_det_A_2(base_points);
-
-
-
-
-
-
+    double A = C_1 - (base_points[0].z * base_points[0].z - base_points[1].z * base_points[1].z);
+    double B = C_2 - (base_points[0].z * base_points[0].z - base_points[2].z * base_points[2].z);
+    Eigen::Matrix<double, 2, 2> D_A_matrix;
+    D_A_matrix << A, (base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y) - B_1,
+           B, (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2;
+    Eigen::Matrix<double, 2, 2> D_B_matrix;
+    D_B_matrix << (base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1, A,
+                  (base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x) - A_2, B;
+    Eigen::Matrix<double, 2, 2> D_matrix;
+    D_matrix << (base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1,
+                (base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y) - B_1,
+                (base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x) - A_2,
+                (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2;
+    double alpha = D_A_matrix.determinant() / D_matrix.determinant();
+    double beta = D_B_matrix.determinant() / D_matrix.determinant();
 
 }
 
