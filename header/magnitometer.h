@@ -30,13 +30,15 @@ private:
     double calculate_det_B_2 () const;
     double calculate_det_C_2 () const;
     double calculate_delta_z (const double a, const double b, const double c) const;
+
+    void calculate_coeffs();
 public:
     double x_0, y_0, z_0, alpha, beta, gamma = 1.0;
     transform_calculator(std::vector<point>& base_points);
-
+    transform_calculator(std::vector<double>& array);
     std::vector<point> base_points;
 
-    void calculate_coeffs();
+
 };
 
 

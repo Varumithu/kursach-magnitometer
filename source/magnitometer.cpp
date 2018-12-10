@@ -7,6 +7,13 @@
 #include <cmath>
 #include <algorithm>
 
+transform_calculator::transform_calculator(std::vector<double>& array) { // I do not check length here, if it is too short vector will throw somwhere
+    for (size_t i = 0; i < 4; ++i) {
+        base_points.emplace_back(array[i * 3], array[i * 3 + 1], array[i * 3 + 2]);
+    }
+    calculate_coeffs();
+}
+
 transform_calculator::transform_calculator(std::vector<point>& base_points) : base_points(base_points) {
     calculate_coeffs();
 }
