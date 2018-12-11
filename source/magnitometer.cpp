@@ -3,25 +3,26 @@
 //
 
 #include "magnitometer.h"
+#include "determinant.h"
 
 #include <cmath>
 #include <algorithm>
 
-transform_calculator::transform_calculator(std::vector<double>& array) { // I do not check length here, if it is too short vector will throw somwhere
+
+transform_calculator::transform_calculator(const double array[12]) { // I do not check length here, if it is too short vector will throw somwhere
     for (size_t i = 0; i < 4; ++i) {
-        base_points.emplace_back(array[i * 3], array[i * 3 + 1], array[i * 3 + 2]);
+        base_points[i] = point(array[i * 3], array[i * 3 + 1], array[i * 3 + 2]);
     }
     calculate_coeffs();
 }
 
-transform_calculator::transform_calculator(std::vector<point>& base_points) : base_points(base_points) {
-    calculate_coeffs();
-}
+//transform_calculator::transform_calculator(std::vector<point>& base_points) : base_points(base_points) {
+//    calculate_coeffs();
+//}
 
 
 double transform_calculator::calculate_det_A_1 () const {
-    Eigen::Matrix<double, 3, 3> A_1;
-    A_1 << base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x,
+    double A_1[9]{base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x,
            base_points[0].y - base_points[1].y,
            base_points[0].z - base_points[1].z,
            base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x,
@@ -29,12 +30,11 @@ double transform_calculator::calculate_det_A_1 () const {
            base_points[0].z - base_points[2].z,
            base_points[0].x * base_points[0].x - base_points[3].x * base_points[3].x,
            base_points[0].y - base_points[3].y,
-           base_points[0].z - base_points[3].z;
-    return A_1.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(A_1);
 }
 double transform_calculator::calculate_det_B_1 () const {
-    Eigen::Matrix<double, 3, 3> B_1;
-    B_1 << base_points[1].y * (base_points[0].y - base_points[1].y),
+    double B_1[9] {base_points[1].y * (base_points[0].y - base_points[1].y),
            base_points[0].y - base_points[1].y,
            base_points[0].z - base_points[1].z,
            base_points[2].y * (base_points[0].y - base_points[2].y),
@@ -42,12 +42,11 @@ double transform_calculator::calculate_det_B_1 () const {
            base_points[0].z - base_points[2].z,
            base_points[3].y * (base_points[0].y - base_points[3].y),
            base_points[0].y - base_points[3].y,
-           base_points[0].z - base_points[3].z;
-    return B_1.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(B_1);
 }
 double transform_calculator::calculate_det_C_1 () const {
-    Eigen::Matrix<double, 3, 3> C_1;
-    C_1 << base_points[1].z * (base_points[0].z - base_points[1].z),
+    double C_1[9] =  {base_points[1].z * (base_points[0].z - base_points[1].z),
            base_points[0].y - base_points[1].y,
            base_points[0].z - base_points[1].z,
            base_points[2].z * (base_points[0].z - base_points[2].z),
@@ -55,12 +54,11 @@ double transform_calculator::calculate_det_C_1 () const {
            base_points[0].z - base_points[2].z,
            base_points[3].z * (base_points[0].z - base_points[3].z),
            base_points[0].y - base_points[3].y,
-           base_points[0].z - base_points[3].z;
-    return C_1.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(C_1);
 }
 double transform_calculator::calculate_det_A_2 () const {
-    Eigen::Matrix<double, 3, 3> A_2;
-    A_2 << base_points[0].x - base_points[1].x,
+    double A_2[9] {base_points[0].x - base_points[1].x,
            base_points[1].x * (base_points[0].x - base_points[1].x),
            base_points[0].z - base_points[1].z,
            base_points[0].x - base_points[2].x,
@@ -68,12 +66,11 @@ double transform_calculator::calculate_det_A_2 () const {
            base_points[0].z - base_points[2].z,
            base_points[0].x - base_points[3].x,
            base_points[3].x * (base_points[0].x - base_points[3].x),
-           base_points[0].z - base_points[3].z;
-    return A_2.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(A_2);
 }
 double transform_calculator::calculate_det_B_2 () const {
-    Eigen::Matrix<double, 3, 3> B_2;
-    B_2 << base_points[0].x - base_points[1].x,
+    double B_2[9] {base_points[0].x - base_points[1].x,
            base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y,
            base_points[0].z - base_points[1].z,
            base_points[0].x - base_points[2].x,
@@ -81,12 +78,11 @@ double transform_calculator::calculate_det_B_2 () const {
            base_points[0].z - base_points[2].z,
            base_points[0].x - base_points[3].x,
            base_points[0].y * base_points[0].y - base_points[3].y * base_points[3].y,
-           base_points[0].z - base_points[3].z;
-    return B_2.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(B_2);
 }
 double transform_calculator::calculate_det_C_2 () const {
-    Eigen::Matrix<double, 3, 3> C_2;
-    C_2 << base_points[0].x - base_points[1].x,
+    double C_2[9] {base_points[0].x - base_points[1].x,
            base_points[1].z * (base_points[0].z - base_points[1].z),
            base_points[0].z - base_points[1].z,
            base_points[0].x - base_points[2].x,
@@ -94,13 +90,12 @@ double transform_calculator::calculate_det_C_2 () const {
            base_points[0].z - base_points[2].z,
            base_points[0].x - base_points[3].x,
            base_points[3].x * (base_points[0].x - base_points[3].x),
-           base_points[0].z - base_points[3].z;
-    return C_2.determinant();
+           base_points[0].z - base_points[3].z};
+    return simple_3_by_3_matrix_determinant(C_2);
 }
 
 double transform_calculator::calculate_det_delta() const {
-    Eigen::Matrix<double, 3, 3> m_delta;
-    m_delta << (base_points[0].x - base_points[1].x),
+    double m_delta[9] {(base_points[0].x - base_points[1].x),
                (base_points[0].y - base_points[1].y),
                (base_points[0].z - base_points[1].z),
                (base_points[0].x - base_points[2].x),
@@ -108,13 +103,12 @@ double transform_calculator::calculate_det_delta() const {
                (base_points[0].z - base_points[2].z),
                (base_points[0].x - base_points[3].x),
                (base_points[0].y - base_points[3].y),
-               (base_points[0].z - base_points[3].z);
-    return m_delta.determinant();
+               (base_points[0].z - base_points[3].z)};
+    return simple_3_by_3_matrix_determinant(m_delta);
 }
 
 double transform_calculator::calculate_delta_z (const double a, const double b, const double c) const {
-    Eigen::Matrix<double, 3, 3> delta_z_m;
-    delta_z_m << a,
+    double delta_z[9] {a,
                (base_points[0].y - base_points[1].y),
                (base_points[0].z - base_points[1].z),
                b,
@@ -122,8 +116,8 @@ double transform_calculator::calculate_delta_z (const double a, const double b, 
                (base_points[0].z - base_points[2].z),
                c,
                (base_points[0].y - base_points[3].y),
-               (base_points[0].z - base_points[3].z);
-    return delta_z_m.determinant();
+               (base_points[0].z - base_points[3].z)};
+    return simple_3_by_3_matrix_determinant(delta_z);
 }
 
 double transform_calculator::calculate_abc (const size_t select) const {
@@ -145,19 +139,16 @@ void transform_calculator::calculate_coeffs() {
     double A_2 = calculate_det_A_2();
     double A = C_1 - (base_points[0].z * base_points[0].z - base_points[1].z * base_points[1].z);
     double B = C_2 - (base_points[0].z * base_points[0].z - base_points[2].z * base_points[2].z);
-    Eigen::Matrix<double, 2, 2> D_A_matrix;
-    D_A_matrix << A, (base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y) - B_1,
-           B, (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2;
-    Eigen::Matrix<double, 2, 2> D_B_matrix;
-    D_B_matrix << (base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1, A,
-                  (base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x) - A_2, B;
-    Eigen::Matrix<double, 2, 2> D_matrix;
-    D_matrix << (base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1,
+    double D_A_matrix[4] {A, (base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y) - B_1,
+           B, (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2};
+    double D_B_matrix[4] {(base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1, A,
+                  (base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x) - A_2, B};
+    double D_matrix[4] {(base_points[0].x * base_points[0].x - base_points[1].x * base_points[1].x) - A_1,
                 (base_points[0].y * base_points[0].y - base_points[1].y * base_points[1].y) - B_1,
                 (base_points[0].x * base_points[0].x - base_points[2].x * base_points[2].x) - A_2,
-                (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2;
-    alpha = D_A_matrix.determinant() / D_matrix.determinant();
-    beta = D_B_matrix.determinant() / D_matrix.determinant();
+                (base_points[0].y * base_points[0].y - base_points[2].y * base_points[2].y) - B_2};
+    alpha = simple_2_by_2_matrix_determinant(D_A_matrix) / simple_2_by_2_matrix_determinant(D_matrix);
+    beta = simple_2_by_2_matrix_determinant(D_B_matrix) / simple_2_by_2_matrix_determinant(D_matrix);
     gamma = 1.0;
     double a = calculate_abc(1);
     double b = calculate_abc(2);

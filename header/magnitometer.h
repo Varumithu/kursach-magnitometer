@@ -5,9 +5,12 @@
 #ifndef KURSACH_MAGNITOMETER_MAGNITOMETER_H
 #define KURSACH_MAGNITOMETER_MAGNITOMETER_H
 
-#include <vector>
-#include <Eigen/Dense>
 
+// for size_t defenition
+#include <cstddef>
+
+
+//helper class to make working with points more intuitive
 class point final {
 public:
     double x, y, z;
@@ -18,7 +21,11 @@ public:
 };
 
 
-
+/* main class that does the calculation of desired coefficients according to the algorythm
+ * The constructor accepts an array of 12 doubles being 4 sets of three coordinates aka 4 points,
+ * constructs base_points array and calls the calculate_coeffs methods which sets the x_0, ..., alpha and beta data members
+ * They are public because i did not want to write getters, but they should not be changed
+*/
 class transform_calculator final {
 private:
     double calculate_abc (const size_t select) const;
@@ -34,9 +41,8 @@ private:
     void calculate_coeffs();
 public:
     double x_0, y_0, z_0, alpha, beta, gamma = 1.0;
-    transform_calculator(std::vector<point>& base_points);
-    transform_calculator(std::vector<double>& array);
-    std::vector<point> base_points;
+    transform_calculator(const double array[12]);
+    point base_points[4];
 
 
 };
